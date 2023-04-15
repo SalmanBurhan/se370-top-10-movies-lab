@@ -111,8 +111,6 @@ public final class Top10Movies extends JFrame {
         /* The Standard Movie Poster Ratio Is 2:3 Width To Height aka 0.667 */
         this.moviePoster.setPreferredSize(new Dimension(333, 500));
         this.moviePoster.setAlignmentX(Component.LEFT_ALIGNMENT);
-        this.moviePoster.setOpaque(true);
-        this.moviePoster.setBackground(Color.blue);
         detailPanel.add(this.moviePoster, detailLayoutConstraint);
         
         detailLayoutConstraint.gridx = 1;
