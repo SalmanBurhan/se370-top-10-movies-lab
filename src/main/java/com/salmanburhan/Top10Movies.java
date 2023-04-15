@@ -3,6 +3,8 @@ package com.salmanburhan;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.formdev.flatlaf.FlatLightLaf;
+
 import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.io.IOException;
@@ -10,16 +12,19 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Image;
 
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.net.URL;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.*;
 
 public final class Top10Movies extends JFrame {
@@ -35,7 +40,7 @@ public final class Top10Movies extends JFrame {
 
         /* Initialize The Superclass, A.K.A. JFrame */
         super("Top 10 Movies");
-        
+                
         /* Set The Default "Mode" When User Clicks The "Close"
          * Button. When Not Assigned Manually, The Default
          * Action Is JFrame.HIDE_ON_CLOSE, Which Gives The
@@ -93,33 +98,55 @@ public final class Top10Movies extends JFrame {
          * Values Of A Given Model A.K.A. The Movie.
          */
         JPanel detailPanel = new JPanel();
-        detailPanel.setLayout(new BoxLayout(detailPanel, BoxLayout.PAGE_AXIS));
+        GridBagConstraints detailLayoutConstraint = new GridBagConstraints();
+        detailLayoutConstraint.fill = GridBagConstraints.BOTH;
+        detailPanel.setLayout(new GridBagLayout());
+        // detailPanel.setLayout(new BoxLayout(detailPanel, BoxLayout.PAGE_AXIS));
+
+        detailLayoutConstraint.gridx = 0;
+        detailLayoutConstraint.gridy = 0;
+        detailLayoutConstraint.gridheight = 3;
 
         this.moviePoster = new JLabel(new ImageIcon());
         /* The Standard Movie Poster Ratio Is 2:3 Width To Height aka 0.667 */
-        this.moviePoster.setPreferredSize(new Dimension(500, 334));
+        this.moviePoster.setPreferredSize(new Dimension(333, 500));
         this.moviePoster.setAlignmentX(Component.LEFT_ALIGNMENT);
-        detailPanel.add(this.moviePoster);
+        this.moviePoster.setOpaque(true);
+        this.moviePoster.setBackground(Color.blue);
+        detailPanel.add(this.moviePoster, detailLayoutConstraint);
         
+        detailLayoutConstraint.gridx = 1;
+        detailLayoutConstraint.gridy = 0;
+        detailLayoutConstraint.gridheight = 1;
+
         this.movieTitleLabel = new JLabel();
         this.movieTitleLabel.setPreferredSize(new Dimension(100, 25));
-        this.movieTitleLabel.setFont(this.movieList.getFont().deriveFont(Font.BOLD));
+        this.movieTitleLabel.setBorder(new EmptyBorder(0, 10, 0, 10));
+        this.movieTitleLabel.setFont(this.movieList.getFont().deriveFont(Font.BOLD, 18));
         this.movieTitleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        detailPanel.add(this.movieTitleLabel);
+        detailPanel.add(this.movieTitleLabel, detailLayoutConstraint);
+
+        detailLayoutConstraint.gridx = 1;
+        detailLayoutConstraint.gridy = 1;
 
         this.movieReleaseLabel = new JLabel();
         this.movieReleaseLabel.setPreferredSize(new Dimension(100, 25));
+        this.movieReleaseLabel.setBorder(new EmptyBorder(0, 10, 0, 10));
         this.movieReleaseLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        detailPanel.add(this.movieReleaseLabel);
+        detailPanel.add(this.movieReleaseLabel, detailLayoutConstraint);
+
+        detailLayoutConstraint.gridx = 1;
+        detailLayoutConstraint.gridy = 2;
 
         this.movieSynopsisLabel = new JTextArea();
-        this.movieSynopsisLabel.setPreferredSize(new Dimension(500, 200)); // Notice Width Here
+        this.movieSynopsisLabel.setPreferredSize(new Dimension(333, 25)); // Notice Width Here
+        this.movieSynopsisLabel.setBorder(new EmptyBorder(0, 10, 0, 10));
         this.movieSynopsisLabel.setLineWrap(true);
         this.movieSynopsisLabel.setWrapStyleWord(true);
         this.movieSynopsisLabel.setEditable(false);
         this.movieSynopsisLabel.setOpaque(false);
         this.movieSynopsisLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        detailPanel.add(this.movieSynopsisLabel);
+        detailPanel.add(this.movieSynopsisLabel, detailLayoutConstraint);
 
         /* Create A SplitPanel Which Will Encapsulate The Two
          * Panels We Created Earlier, Creating An Associated
@@ -194,6 +221,13 @@ public final class Top10Movies extends JFrame {
      * We Can Update Everything Else BUT The Year, We Will Do
      * Just That... Being Sure To Specify That The Release Year
      * Is "Unknown".
+     * 
+     * We Take The Originally Downloaded Image And
+     * `get[a]ScaledInstance` Of It To Match The UI Component's
+     * Dimensions As Well As Being Ensure To Ensure The Image's
+     * Original Aspect Ratio, Which We Set Up When We Defined
+     * The Image UI Component (The JLabel Whose Background We
+     * Are Setting To Be The `ImageIcon`) Width And Height.
      */
     private void updateMovieDetails(int selectedIndex) {
 
@@ -213,8 +247,8 @@ public final class Top10Movies extends JFrame {
             URL poster_url = new URL(poster_path);
             Image poster_image = ImageIO.read(poster_url);
             Image scaled_poster_image = poster_image.getScaledInstance(
+                this.moviePoster.getWidth(),
                 -1,
-                this.moviePoster.getHeight(),
                 Image.SCALE_SMOOTH
             );
             this.moviePoster.setIcon(new ImageIcon(scaled_poster_image));
@@ -238,6 +272,7 @@ public final class Top10Movies extends JFrame {
      * @param args The arguments of the program.
      */
     public static void main(String[] args) {
+        FlatLightLaf.setup();
         new Top10Movies();
     }
 }
