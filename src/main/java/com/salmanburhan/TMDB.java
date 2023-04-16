@@ -13,7 +13,7 @@ import java.net.URI;
 public class TMDB {
     
     static String BASE_URL = "https://api.themoviedb.org/3";
-    static String API_KEY = "***REMOVED***";
+    static String API_KEY = "TMDB_API_KEY";
 
     public static JSONArray popular() {
 
